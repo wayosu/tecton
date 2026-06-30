@@ -112,7 +112,7 @@ export async function POST(request: NextRequest) {
 
   const id = uuidv4();
   const now = new Date();
-  const hashedPassword = await hash(password, 10);
+  const hashedPassword = await hash(password!, 10);
 
   db.insert(users)
     .values({
