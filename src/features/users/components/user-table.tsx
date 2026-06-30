@@ -5,6 +5,7 @@ import {
   useReactTable,
   getCoreRowModel,
   getSortedRowModel,
+  flexRender,
   type SortingState,
   type ColumnDef,
 } from '@tanstack/react-table';
@@ -29,7 +30,7 @@ import { useUsers } from '../hooks/use-users';
 import { getUserColumns } from './user-columns';
 import { UserRowActions } from './user-row-actions';
 import { UserToolbar } from './user-toolbar';
-import { SkeletonRow } from '@/components/shared/skeleton';
+import { Skeleton } from '@/components/shared/skeleton';
 import { EmptyState } from '@/components/shared/empty-state';
 import { Users } from 'lucide-react';
 import type { User } from '../types';
@@ -125,7 +126,10 @@ export function UserTable({ currentUserRole }: UserTableProps) {
                     <div className="flex items-center gap-1">
                       {header.isPlaceholder
                         ? null
-                        : (header.column.columnDef.header as string)}
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                       {header.column.getCanSort() && (
                         <span className="ml-1">
                           {{
@@ -145,7 +149,15 @@ export function UserTable({ currentUserRole }: UserTableProps) {
           <TableBody>
             {isLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
-                <SkeletonRow key={i} cols={5} />
+                <TableRow key={i}>
+                  {Array.from({ length: 5 }).map((_, j) => (
+                    <TableCell key={j} className="py-3">
+                      <Skeleton
+                        className={cn('h-4', j === 0 ? 'w-32' : 'w-full')}
+                      />
+                    </TableCell>
+                  ))}
+                </TableRow>
               ))
             ) : table.getRowModel().rows.length === 0 ? (
               <TableRow>
@@ -167,9 +179,10 @@ export function UserTable({ currentUserRole }: UserTableProps) {
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="py-3">
-                      {typeof cell.column.columnDef.cell === 'function'
-                        ? (cell.column.columnDef.cell as any)(cell.getContext())
-                        : null}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
