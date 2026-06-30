@@ -9,6 +9,7 @@ import {
 } from 'lucide-react';
 import { PageShell } from '@/components/layout/page-shell';
 import { StatusBadge } from '@/components/shared/status-badge';
+import { Stat, H3 } from '@/components/ui/typography';
 
 const stats = [
   {
@@ -74,9 +75,7 @@ export default async function DashboardPage() {
                 </div>
               </div>
               <div className="mt-3 flex items-baseline gap-2">
-                <span className="text-2xl font-semibold tracking-tight">
-                  {stat.value}
-                </span>
+                <Stat>{stat.value}</Stat>
                 <span className="flex items-center gap-0.5 text-xs font-medium">
                   {stat.trend === 'up' ? (
                     <>
@@ -105,7 +104,7 @@ export default async function DashboardPage() {
         {/* Quick Actions */}
         <div className="rounded-lg border bg-card">
           <div className="border-b px-4 py-3">
-            <h3 className="text-sm font-semibold">Quick Actions</h3>
+            <H3>Quick Actions</H3>
           </div>
           <div className="grid grid-cols-2 gap-2 p-4">
             {[
@@ -128,7 +127,7 @@ export default async function DashboardPage() {
         {/* Recent Activity */}
         <div className="rounded-lg border bg-card">
           <div className="border-b px-4 py-3">
-            <h3 className="text-sm font-semibold">Recent Activity</h3>
+            <H3>Recent Activity</H3>
           </div>
           <div className="divide-y">
             {recentActivity.map((item, i) => (
