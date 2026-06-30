@@ -10,47 +10,52 @@ import {
 import { PageShell } from '@/components/layout/page-shell';
 import { StatusBadge } from '@/components/shared/status-badge';
 import { Stat, H3 } from '@/components/ui/typography';
-
-const stats = [
-  {
-    title: 'Total Users',
-    value: '2,847',
-    icon: Users,
-    change: '+12.5%',
-    trend: 'up' as const,
-  },
-  {
-    title: 'Revenue',
-    value: '$48.2k',
-    icon: DollarSign,
-    change: '+8.2%',
-    trend: 'up' as const,
-  },
-  {
-    title: 'Active Sessions',
-    value: '342',
-    icon: Activity,
-    change: '+18.7%',
-    trend: 'up' as const,
-  },
-  {
-    title: 'Pending Orders',
-    value: '14',
-    icon: ShoppingCart,
-    change: '-3.1%',
-    trend: 'down' as const,
-  },
-];
-
-const recentActivity = [
-  { user: 'Admin', action: 'created a new user', time: '2 min ago' },
-  { user: 'Editor', action: 'updated settings', time: '15 min ago' },
-  { user: 'Admin', action: 'deployed v0.2.0', time: '1 hour ago' },
-  { user: 'Viewer', action: 'viewed dashboard', time: '2 hours ago' },
-];
+import { getDashboardStats, getRecentUsers } from '@/features/dashboard/queries';
+import { formatDistanceToNow } from 'date-fns';
 
 export default async function DashboardPage() {
   const session = await auth();
+  const stats = await getDashboardStats();
+  const recentUsers = getRecentUsers(5);
+
+  const statCards = [
+    {
+      title: 'Total Users',
+      value: stats.totalUsers.toLocaleString(),
+      icon: Users,
+      change: `+${stats.totalUsers > 0 ? Math.round((stats.usersByRole.length / stats.totalUsers) * 100) : 0}%`,
+      trend: stats.totalUsers > 0 ? 'up' as const : 'down' as const,
+    },
+    {
+      title: 'Revenue',
+      value: '$0',
+      icon: DollarSign,
+      change: '—',
+      trend: 'up' as const,
+    },
+    {
+      title: 'Active Sessions',
+      value: '—',
+      icon: Activity,
+      change: '—',
+      trend: 'up' as const,
+    },
+    {
+      title: 'Users by Role',
+      value: String(stats.usersByRole.length > 0 ? stats.usersByRole.map(r => r.count).reduce((a, b) => a + b) : 0),
+      icon: ShoppingCart,
+      change: `${stats.usersByRole.length} roles`,
+      trend: 'up' as const,
+    },
+  ];
+
+  const recentActivity = recentUsers.map((user) => ({
+    initials: (user.name?.[0] || user.email[0]).toUpperCase(),
+    name: user.name || 'Unknown',
+    action: user.email,
+    time: formatDistanceToNow(new Date(user.createdAt), { addSuffix: true }),
+    role: user.role,
+  }));
 
   return (
     <PageShell
@@ -59,7 +64,7 @@ export default async function DashboardPage() {
     >
       {/* Stats Grid */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        {stats.map((stat) => {
+        {statCards.map((stat) => {
           const Icon = stat.icon;
           return (
             <div
@@ -78,19 +83,15 @@ export default async function DashboardPage() {
                 <Stat>{stat.value}</Stat>
                 <span className="flex items-center gap-0.5 text-xs font-medium">
                   {stat.trend === 'up' ? (
-                    <>
-                      <ArrowUpRight className="h-3 w-3 text-emerald-500" />
-                      <span className="text-emerald-600 dark:text-emerald-400">
-                        {stat.change}
-                      </span>
-                    </>
+                    <span className="flex items-center gap-0.5 text-emerald-600 dark:text-emerald-400">
+                      <ArrowUpRight className="h-3 w-3" />
+                      {stat.change}
+                    </span>
                   ) : (
-                    <>
-                      <ArrowDownRight className="h-3 w-3 text-red-500" />
-                      <span className="text-red-600 dark:text-red-400">
-                        {stat.change}
-                      </span>
-                    </>
+                    <span className="flex items-center gap-0.5 text-red-600 dark:text-red-400">
+                      <ArrowDownRight className="h-3 w-3" />
+                      {stat.change}
+                    </span>
                   )}
                 </span>
               </div>
@@ -124,26 +125,32 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {/* Recent Activity */}
+        {/* Recent User Activity */}
         <div className="rounded-lg border bg-card">
           <div className="border-b px-4 py-3">
-            <H3>Recent Activity</H3>
+            <H3>Recent Users</H3>
           </div>
           <div className="divide-y">
-            {recentActivity.map((item, i) => (
-              <div key={i} className="flex items-center gap-3 px-4 py-2.5">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-[11px] font-medium">
-                  {item.user[0]}
+            {recentActivity.length > 0 ? (
+              recentActivity.map((item, i) => (
+                <div key={i} className="flex items-center gap-3 px-4 py-2.5">
+                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-[11px] font-medium uppercase">
+                    {item.initials}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs">
+                      <span className="font-medium">{item.name}</span>{' '}
+                      <span className="text-muted-foreground">{item.action}</span>
+                    </p>
+                  </div>
+                  <StatusBadge variant="secondary">{item.time}</StatusBadge>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs">
-                    <span className="font-medium">{item.user}</span>{' '}
-                    <span className="text-muted-foreground">{item.action}</span>
-                  </p>
-                </div>
-                <StatusBadge variant="secondary">{item.time}</StatusBadge>
+              ))
+            ) : (
+              <div className="px-4 py-6 text-center text-xs text-muted-foreground">
+                No users yet. Seed the database to see activity.
               </div>
-            ))}
+            )}
           </div>
         </div>
       </div>
