@@ -1,106 +1,153 @@
 import { auth } from '@/auth';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Users,
   Activity,
   DollarSign,
   ShoppingCart,
+  ArrowUpRight,
+  ArrowDownRight,
 } from 'lucide-react';
+import { PageShell } from '@/components/layout/page-shell';
+import { StatusBadge } from '@/components/shared/status-badge';
 
 const stats = [
   {
     title: 'Total Users',
-    value: '1,234',
+    value: '2,847',
     icon: Users,
-    change: '+12%',
-    changeType: 'positive' as const,
+    change: '+12.5%',
+    trend: 'up' as const,
   },
   {
     title: 'Revenue',
-    value: '$45,231',
+    value: '$48.2k',
     icon: DollarSign,
     change: '+8.2%',
-    changeType: 'positive' as const,
+    trend: 'up' as const,
   },
   {
-    title: 'Orders',
-    value: '356',
+    title: 'Active Sessions',
+    value: '342',
+    icon: Activity,
+    change: '+18.7%',
+    trend: 'up' as const,
+  },
+  {
+    title: 'Pending Orders',
+    value: '14',
     icon: ShoppingCart,
     change: '-3.1%',
-    changeType: 'negative' as const,
+    trend: 'down' as const,
   },
-  {
-    title: 'Active Now',
-    value: '42',
-    icon: Activity,
-    change: '+18%',
-    changeType: 'positive' as const,
-  },
+];
+
+const recentActivity = [
+  { user: 'Admin', action: 'created a new user', time: '2 min ago' },
+  { user: 'Editor', action: 'updated settings', time: '15 min ago' },
+  { user: 'Admin', action: 'deployed v0.2.0', time: '1 hour ago' },
+  { user: 'Viewer', action: 'viewed dashboard', time: '2 hours ago' },
 ];
 
 export default async function DashboardPage() {
   const session = await auth();
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-muted-foreground">
-          Welcome back, {session?.user?.name || 'User'}
-        </p>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <PageShell
+      title="Dashboard"
+      description={`Welcome back, ${session?.user?.name || 'User'}. Here's what's happening.`}
+    >
+      {/* Stats Grid */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.title}>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+            <div
+              key={stat.title}
+              className="group rounded-lg border bg-card p-4 transition-colors hover:border-primary/20"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium text-muted-foreground">
                   {stat.title}
-                </CardTitle>
-                <Icon className="h-4 w-4 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stat.value}</div>
-                <p
-                  className={
-                    stat.changeType === 'positive'
-                      ? 'text-xs text-green-600 dark:text-green-400'
-                      : 'text-xs text-red-600 dark:text-red-400'
-                  }
-                >
-                  {stat.change} from last month
-                </p>
-              </CardContent>
-            </Card>
+                </span>
+                <div className="rounded-md bg-muted p-1.5 transition-colors group-hover:bg-primary/10">
+                  <Icon className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
+                </div>
+              </div>
+              <div className="mt-3 flex items-baseline gap-2">
+                <span className="text-2xl font-semibold tracking-tight">
+                  {stat.value}
+                </span>
+                <span className="flex items-center gap-0.5 text-xs font-medium">
+                  {stat.trend === 'up' ? (
+                    <>
+                      <ArrowUpRight className="h-3 w-3 text-emerald-500" />
+                      <span className="text-emerald-600 dark:text-emerald-400">
+                        {stat.change}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <ArrowDownRight className="h-3 w-3 text-red-500" />
+                      <span className="text-red-600 dark:text-red-400">
+                        {stat.change}
+                      </span>
+                    </>
+                  )}
+                </span>
+              </div>
+            </div>
           );
         })}
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
-              Activity feed coming soon. Connect your data sources to see
-              real-time events.
-            </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
-              Shortcuts and common tasks will appear here.
-            </p>
-          </CardContent>
-        </Card>
+      {/* Content Row */}
+      <div className="grid gap-4 lg:grid-cols-2">
+        {/* Quick Actions */}
+        <div className="rounded-lg border bg-card">
+          <div className="border-b px-4 py-3">
+            <h3 className="text-sm font-semibold">Quick Actions</h3>
+          </div>
+          <div className="grid grid-cols-2 gap-2 p-4">
+            {[
+              { label: 'Add User', href: '/users' },
+              { label: 'View Reports', href: '/dashboard' },
+              { label: 'Settings', href: '/settings' },
+              { label: 'API Docs', href: '#' },
+            ].map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                className="flex items-center gap-2 rounded-md border bg-muted/30 px-3 py-2.5 text-xs font-medium transition-colors hover:border-primary/30 hover:bg-muted"
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </div>
+
+        {/* Recent Activity */}
+        <div className="rounded-lg border bg-card">
+          <div className="border-b px-4 py-3">
+            <h3 className="text-sm font-semibold">Recent Activity</h3>
+          </div>
+          <div className="divide-y">
+            {recentActivity.map((item, i) => (
+              <div key={i} className="flex items-center gap-3 px-4 py-2.5">
+                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-[11px] font-medium">
+                  {item.user[0]}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs">
+                    <span className="font-medium">{item.user}</span>{' '}
+                    <span className="text-muted-foreground">{item.action}</span>
+                  </p>
+                </div>
+                <StatusBadge variant="secondary">{item.time}</StatusBadge>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
-    </div>
+    </PageShell>
   );
 }

@@ -32,14 +32,14 @@ export function Sidebar({ open, onToggle, userRole = 'viewer' }: SidebarProps) {
   return (
     <aside
       className={cn(
-        'fixed left-0 top-0 z-40 h-screen border-r bg-sidebar transition-all duration-300',
-        open ? 'w-64' : 'w-16',
+        'fixed left-0 top-0 z-40 flex h-screen flex-col border-r bg-sidebar transition-all duration-200',
+        open ? 'w-60' : 'w-[56px]',
       )}
     >
       {/* Logo */}
-      <div className="flex h-14 items-center justify-between border-b px-4">
+      <div className="flex h-12 items-center justify-between border-b px-3">
         {open && (
-          <Link href="/dashboard" className="text-lg font-bold tracking-tight">
+          <Link href="/dashboard" className="text-sm font-semibold tracking-tight">
             tecton
           </Link>
         )}
@@ -47,18 +47,18 @@ export function Sidebar({ open, onToggle, userRole = 'viewer' }: SidebarProps) {
           variant="ghost"
           size="icon"
           onClick={onToggle}
-          className="h-8 w-8"
+          className={cn('h-7 w-7', !open && 'mx-auto')}
         >
           {open ? (
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-3.5 w-3.5" />
           ) : (
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-3.5 w-3.5" />
           )}
         </Button>
       </div>
 
       {/* Navigation */}
-      <ScrollArea className="flex-1 px-3 py-4">
+      <ScrollArea className="flex-1 px-2 py-3">
         {navigation.map((section) => {
           const visibleItems = section.items.filter(
             (item) => !item.permission || hasPermission(userRole, item.permission),
@@ -66,15 +66,18 @@ export function Sidebar({ open, onToggle, userRole = 'viewer' }: SidebarProps) {
           if (visibleItems.length === 0) return null;
 
           return (
-            <div key={section.title} className="mb-4">
+            <div key={section.title} className="mb-4 last:mb-0">
               {open && (
-                <h3 className="mb-2 px-3 text-xs font-semibold uppercase text-muted-foreground">
+                <p className="mb-1.5 px-3 text-[11px] font-medium uppercase tracking-wider text-muted-foreground/60">
                   {section.title}
-                </h3>
+                </p>
               )}
-              <nav className="space-y-1">
+              <nav className="space-y-0.5">
                 {visibleItems.map((item) => {
-                  const isActive = pathname === item.href || pathname.startsWith(item.href + '/');
+                  const isActive =
+                    pathname === item.href ||
+                    (item.href !== '/dashboard' &&
+                      pathname.startsWith(item.href + '/'));
                   const Icon = item.icon;
 
                   const linkContent = (
@@ -82,14 +85,21 @@ export function Sidebar({ open, onToggle, userRole = 'viewer' }: SidebarProps) {
                       key={item.href}
                       href={item.href}
                       className={cn(
-                        'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
+                        'group flex items-center gap-3 rounded-md px-3 py-1.5 text-sm font-medium transition-all',
                         isActive
-                          ? 'bg-primary/10 text-primary'
-                          : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground',
-                        !open && 'justify-center',
+                          ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                          : 'text-sidebar-foreground/60 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground',
+                        !open && 'justify-center px-0',
                       )}
                     >
-                      <Icon className="h-5 w-5 shrink-0" />
+                      <Icon
+                        className={cn(
+                          'h-4 w-4 shrink-0 transition-colors',
+                          isActive
+                            ? 'text-sidebar-accent-foreground'
+                            : 'text-sidebar-foreground/40 group-hover:text-sidebar-foreground/70',
+                        )}
+                      />
                       {open && <span>{item.title}</span>}
                     </Link>
                   );
@@ -100,7 +110,7 @@ export function Sidebar({ open, onToggle, userRole = 'viewer' }: SidebarProps) {
                         <TooltipTrigger>
                           <span>{linkContent}</span>
                         </TooltipTrigger>
-                        <TooltipContent side="right">
+                        <TooltipContent side="right" className="text-xs">
                           {item.title}
                         </TooltipContent>
                       </Tooltip>
@@ -116,18 +126,19 @@ export function Sidebar({ open, onToggle, userRole = 'viewer' }: SidebarProps) {
       </ScrollArea>
 
       {/* Sign Out */}
-      <div className="border-t p-3">
+      <div className="border-t p-2">
         <Button
           variant="ghost"
+          size="sm"
           className={cn(
-            'w-full text-muted-foreground hover:text-foreground',
+            'w-full justify-start gap-3 text-sidebar-foreground/50 hover:text-sidebar-foreground',
             !open && 'justify-center px-0',
           )}
           onClick={() => signOut()}
         >
-            <LogOut className="h-5 w-5" />
-            {open && <span className="ml-3">Sign out</span>}
-          </Button>
+          <LogOut className="h-4 w-4 shrink-0" />
+          {open && <span className="text-sm">Sign out</span>}
+        </Button>
       </div>
     </aside>
   );

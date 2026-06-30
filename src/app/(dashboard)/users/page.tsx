@@ -1,24 +1,41 @@
+import { PageShell } from '@/components/layout/page-shell';
+import { EmptyState } from '@/components/shared/empty-state';
+import { Users } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { auth } from '@/auth';
+import { hasPermission } from '@/lib/rbac';
+import type { Role } from '@/lib/rbac';
 
 export default async function UsersPage() {
   const session = await auth();
+  const role = (session?.user as Record<string, unknown>)?.role as Role;
+  const canCreate = hasPermission(role, 'users:create');
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold tracking-tight">Users</h1>
-        <p className="text-muted-foreground">
-          Manage user accounts and roles.
-        </p>
-      </div>
-
-      <div className="rounded-lg border bg-card p-8 text-center">
-        <p className="text-muted-foreground">
-          User management table coming soon. This will include sorting,
-          filtering, pagination, and role management powered by TanStack
-          Table.
-        </p>
-      </div>
-    </div>
+    <PageShell
+      title="Users"
+      description="Manage user accounts, roles, and permissions."
+      action={
+        canCreate ? (
+          <Button size="sm" disabled>
+            Add User
+          </Button>
+        ) : undefined
+      }
+    >
+      <EmptyState
+        icon={Users}
+        title="No users yet"
+        description="User management will display here once connected. Advanced features include sorting, filtering, pagination, and role management."
+        action={
+          canCreate
+            ? {
+                label: 'Add your first user',
+                onClick: () => {},
+              }
+            : undefined
+        }
+      />
+    </PageShell>
   );
 }

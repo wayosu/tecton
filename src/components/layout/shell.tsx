@@ -21,7 +21,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <div
         className={cn(
           'transition-all duration-300',
-          sidebarOpen ? 'lg:pl-64' : 'lg:pl-16',
+          sidebarOpen ? 'lg:pl-60' : 'lg:pl-[56px]',
         )}
       >
         <Header
