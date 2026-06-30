@@ -16,7 +16,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <Sidebar
         open={sidebarOpen}
         onToggle={() => setSidebarOpen(!sidebarOpen)}
-        userRole={(session?.user as { role?: Role })?.role}
+        userRole={session?.user?.role}
       />
       <div
         className={cn(

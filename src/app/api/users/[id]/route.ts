@@ -13,13 +13,13 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const session = await auth();
-  const role = (session?.user as Record<string, unknown>)?.role as Role;
-  const sessionUserId = session?.user?.id as string;
-  const { id } = await params;
-
-  if (!hasPermission(role, 'users:update')) {
+  if (!session?.user?.role || !hasPermission(session.user.role, 'users:update')) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
+
+  const currentUserRole = session.user.role;
+  const sessionUserId = session.user.id;
+  const { id } = await params;
 
   const body = await request.json();
   const parsed = updateUserSchema.safeParse(body);
@@ -48,7 +48,7 @@ export async function PATCH(
   }
 
   // Editor can only set viewer/editor roles
-  if (role === 'editor' && newRole === 'admin') {
+  if (currentUserRole === 'editor' && newRole === 'admin') {
     return NextResponse.json(
       { error: 'Editors cannot assign admin role' },
       { status: 403 },
@@ -95,13 +95,12 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const session = await auth();
-  const role = (session?.user as Record<string, unknown>)?.role as Role;
-  const sessionUserId = session?.user?.id as string;
-  const { id } = await params;
-
-  if (!hasPermission(role, 'users:delete')) {
+  if (!session?.user?.role || !hasPermission(session.user.role, 'users:delete')) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
+
+  const sessionUserId = session.user.id;
+  const { id } = await params;
 
   // Cannot delete self
   if (id === sessionUserId) {

@@ -92,8 +92,8 @@ npm run seed       # Seed database with sample users
 
 ## 📝 Roadmap
 
-- [ ] Advanced data table (TanStack Table with sorting, filtering, pagination)
-- [ ] User CRUD with forms
+- [x] Advanced data table (TanStack Table with sorting, filtering, pagination)
+- [x] User CRUD with forms
 - [ ] Charts and analytics dashboard
 - [ ] Email verification
 - [ ] OAuth providers (Google, GitHub)

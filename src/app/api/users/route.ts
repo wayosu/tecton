@@ -7,13 +7,11 @@ import { eq } from 'drizzle-orm';
 import { hash } from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
 import { createUserSchema } from '@/features/users/types';
-import type { Role, User, UsersResponse } from '@/features/users/types';
+import type { User, UsersResponse } from '@/features/users/types';
 
 export async function GET(request: NextRequest) {
   const session = await auth();
-  const role = (session?.user as Record<string, unknown>)?.role as Role;
-
-  if (!hasPermission(role, 'users:read')) {
+  if (!session?.user?.role || !hasPermission(session.user.role, 'users:read')) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
@@ -70,11 +68,11 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const session = await auth();
-  const role = (session?.user as Record<string, unknown>)?.role as Role;
-
-  if (!hasPermission(role, 'users:create')) {
+  if (!session?.user?.role || !hasPermission(session.user.role, 'users:create')) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
+
+  const currentUserRole = session.user.role;
 
   const body = await request.json();
   const parsed = createUserSchema.safeParse(body);
@@ -89,7 +87,7 @@ export async function POST(request: NextRequest) {
   const { name, email, password, role: newRole } = parsed.data;
 
   // Editor can only create viewer/editor, not admin
-  if (role === 'editor' && newRole === 'admin') {
+  if (currentUserRole === 'editor' && newRole === 'admin') {
     return NextResponse.json(
       { error: 'Editors cannot create admin users' },
       { status: 403 },

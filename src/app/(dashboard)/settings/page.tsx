@@ -5,7 +5,7 @@ import type { Role } from '@/lib/rbac';
 
 export default async function SettingsPage() {
   const session = await auth();
-  const role = (session?.user as Record<string, unknown>)?.role as Role;
+  const role = session?.user?.role;
 
   return (
     <PageShell
