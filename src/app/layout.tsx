@@ -1,18 +1,18 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Inter, JetBrains_Mono } from 'next/font/google';
 import { Providers } from '@/components/providers';
 import './globals.css';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const interSans = Inter({
+  variable: '--font-inter-sans',
   subsets: ['latin'],
   // Full weight spectrum for admin dashboard typography
   // 300: de-emphasized, 400: body, 500: emphasis/UI, 600: headings, 700: strong
   weight: ['300', '400', '500', '600', '700'],
 });
 
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const jetbrainsMono = JetBrains_Mono({
+  variable: '--font-jetbrains-mono',
   subsets: ['latin'],
   weight: ['400', '500'],
 });
@@ -32,7 +32,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+      className={`${interSans.variable} ${jetbrainsMono.variable} antialiased`}
     >
       <body className="min-h-screen bg-background font-sans">
         <Providers>{children}</Providers>
