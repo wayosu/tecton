@@ -1,11 +1,12 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { users } from '@/db/schema';
 import { hasPermission } from '@/lib/rbac';
-import type { Role } from '@/lib/rbac';
+import { count } from 'drizzle-orm';
+import type { Role, User, UsersResponse } from '@/features/users/types';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   const session = await auth();
   const role = (session?.user as Record<string, unknown>)?.role as Role;
 
@@ -13,25 +14,53 @@ export async function GET() {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
   }
 
+  const { searchParams } = request.nextUrl;
+  const page = Math.max(1, Number(searchParams.get('page')) || 1);
+  const limit = Math.min(100, Math.max(1, Number(searchParams.get('limit')) || 10));
+  const sort = (searchParams.get('sort') as keyof User) || 'createdAt';
+  const order = searchParams.get('order') === 'asc' ? 'asc' : 'desc';
+  const search = searchParams.get('search') || '';
+
+  const offset = (page - 1) * limit;
+
+  // Fetch all users (SQLite doesn't support ILIKE easily, filter in JS)
   const allUsers = db.select().from(users).all();
 
-  // Remove hashedPassword from response
-  const safeUsers = allUsers.map(({ hashedPassword: _, ...user }) => user);
+  // Safe users (remove hashedPassword)
+  const safeUsers: User[] = allUsers.map(({ hashedPassword: _, ...user }) => user);
 
-  return NextResponse.json({ data: safeUsers });
-}
-
-export async function POST(request: Request) {
-  const session = await auth();
-  const role = (session?.user as Record<string, unknown>)?.role as Role;
-
-  if (!hasPermission(role, 'users:create')) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  // Filter by search
+  let filtered = safeUsers;
+  if (search) {
+    const s = search.toLowerCase();
+    filtered = safeUsers.filter(
+      (u) =>
+        u.name?.toLowerCase().includes(s) ||
+        u.email.toLowerCase().includes(s),
+    );
   }
 
-  const body = await request.json();
-  // TODO: Validate with zod
-  const newUser = db.insert(users).values(body).returning().get();
+  // Sort
+  const sortKey = sort as keyof User;
+  filtered.sort((a, b) => {
+    const aVal = a[sortKey];
+    const bVal = b[sortKey];
+    if (aVal == null) return 1;
+    if (bVal == null) return -1;
+    if (aVal < bVal) return order === 'asc' ? -1 : 1;
+    if (aVal > bVal) return order === 'asc' ? 1 : -1;
+    return 0;
+  });
 
-  return NextResponse.json({ data: newUser }, { status: 201 });
+  // Paginate
+  const total = filtered.length;
+  const paginated = filtered.slice(offset, offset + limit);
+
+  return NextResponse.json({
+    data: paginated,
+    total,
+    page,
+    limit,
+    totalPages: Math.ceil(total / limit),
+  } satisfies UsersResponse);
 }
