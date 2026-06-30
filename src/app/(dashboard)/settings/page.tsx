@@ -1,7 +1,8 @@
 import { PageShell } from '@/components/layout/page-shell';
 import { auth } from '@/auth';
+import { ProfileForm } from '@/features/settings/components/profile-form';
+import { PasswordForm } from '@/features/settings/components/password-form';
 import { StatusBadge } from '@/components/shared/status-badge';
-import type { Role } from '@/lib/rbac';
 
 export default async function SettingsPage() {
   const session = await auth();
@@ -13,30 +14,37 @@ export default async function SettingsPage() {
       description="Manage your account and application preferences."
     >
       <div className="grid gap-4 max-w-2xl">
-        {/* Profile */}
+        {/* Profile Header */}
         <div className="rounded-lg border bg-card">
           <div className="border-b px-4 py-3">
-            <h3 className="text-sm font-semibold">Profile</h3>
+            <h3 className="text-sm font-semibold">Account</h3>
           </div>
-          <div className="p-4 space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-medium">
-                {session?.user?.name?.[0]?.toUpperCase() || 'U'}
-              </div>
-              <div>
-                <p className="text-sm font-medium">
-                  {session?.user?.name || 'Unknown User'}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  {session?.user?.email}
-                </p>
-              </div>
-              <StatusBadge variant="default" dot className="ml-auto">
-                {role}
-              </StatusBadge>
+          <div className="p-4 flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-medium">
+              {session?.user?.name?.[0]?.toUpperCase() || 'U'}
             </div>
+            <div className="flex-1">
+              <p className="text-sm font-medium">
+                {session?.user?.name || 'Unknown User'}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {session?.user?.email}
+              </p>
+            </div>
+            <StatusBadge variant="default" dot className="ml-auto">
+              {role}
+            </StatusBadge>
           </div>
         </div>
+
+        {/* Edit Profile */}
+        <ProfileForm
+          defaultName={session?.user?.name ?? null}
+          defaultEmail={session?.user?.email ?? null}
+        />
+
+        {/* Change Password */}
+        <PasswordForm />
 
         {/* Appearance */}
         <div className="rounded-lg border bg-card">
