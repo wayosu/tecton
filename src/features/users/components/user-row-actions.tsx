@@ -15,8 +15,8 @@ import type { Role } from '@/lib/rbac';
 interface UserRowActionsProps {
   user: User;
   currentUserRole?: Role;
-  onEdit?: (user: User) => void;
-  onDelete?: (user: User) => void;
+  onEdit: (user: User) => void;
+  onDelete: (user: User) => void;
 }
 
 export function UserRowActions({
