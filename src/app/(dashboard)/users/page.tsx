@@ -24,7 +24,7 @@ export default async function UsersPage() {
       }
     >
       <EmptyState
-        icon={Users}
+        icon={<Users className="h-6 w-6 text-muted-foreground" />}
         title="No users yet"
         description="User management will display here once connected. Advanced features include sorting, filtering, pagination, and role management."
         action={
