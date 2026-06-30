@@ -3,7 +3,10 @@ import { auth } from '@/auth';
 import { db } from '@/lib/db';
 import { users } from '@/db/schema';
 import { hasPermission } from '@/lib/rbac';
-import { count } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
+import { hash } from 'bcryptjs';
+import { v4 as uuidv4 } from 'uuid';
+import { createUserSchema } from '@/features/users/types';
 import type { Role, User, UsersResponse } from '@/features/users/types';
 
 export async function GET(request: NextRequest) {
@@ -63,4 +66,73 @@ export async function GET(request: NextRequest) {
     limit,
     totalPages: Math.ceil(total / limit),
   } satisfies UsersResponse);
+}
+
+export async function POST(request: NextRequest) {
+  const session = await auth();
+  const role = (session?.user as Record<string, unknown>)?.role as Role;
+
+  if (!hasPermission(role, 'users:create')) {
+    return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  }
+
+  const body = await request.json();
+  const parsed = createUserSchema.safeParse(body);
+
+  if (!parsed.success) {
+    return NextResponse.json(
+      { error: 'Validation failed', details: parsed.error.flatten() },
+      { status: 400 },
+    );
+  }
+
+  const { name, email, password, role: newRole } = parsed.data;
+
+  // Editor can only create viewer/editor, not admin
+  if (role === 'editor' && newRole === 'admin') {
+    return NextResponse.json(
+      { error: 'Editors cannot create admin users' },
+      { status: 403 },
+    );
+  }
+
+  // Check email uniqueness
+  const existing = db
+    .select()
+    .from(users)
+    .where(eq(users.email, email))
+    .get();
+
+  if (existing) {
+    return NextResponse.json(
+      { error: 'Email already exists' },
+      { status: 409 },
+    );
+  }
+
+  const id = uuidv4();
+  const now = new Date();
+  const hashedPassword = await hash(password, 10);
+
+  db.insert(users)
+    .values({
+      id,
+      name,
+      email,
+      hashedPassword,
+      role: newRole,
+      createdAt: now,
+      updatedAt: now,
+    })
+    .run();
+
+  const created = db
+    .select()
+    .from(users)
+    .where(eq(users.id, id))
+    .get();
+
+  const { hashedPassword: _, ...safeUser } = created!;
+
+  return NextResponse.json({ data: safeUser }, { status: 201 });
 }
