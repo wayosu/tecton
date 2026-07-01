@@ -40,7 +40,6 @@ yarn-error.log*
 sqlite.db
 sqlite.db-wal
 sqlite.db-shm
-drizzle/
 
 # typescript
 *.tsbuildinfo
