@@ -34,6 +34,24 @@ async function seed() {
       console.log(`   ⏭️  Skipped ${user.email} (already exists)`);
       _skipped++;
       userIds.push(existing.id);
+
+      // Fix existing users with null email_verified
+      if (!existing.emailVerified) {
+        db.update(users)
+          .set({ emailVerified: new Date() })
+          .where(eq(users.email, user.email))
+          .run();
+        console.log(`   🔧 Fixed emailVerified for ${user.email}`);
+      }
+
+      // Re-hash if password is stale (e.g., bcrypt cost change)
+      if (!existing.hashedPassword?.startsWith('$2b$12$')) {
+        db.update(users)
+          .set({ hashedPassword })
+          .where(eq(users.email, user.email))
+          .run();
+        console.log(`   🔧 Re-hashed password for ${user.email}`);
+      }
     } else {
       const id = uuid();
       db.insert(users)
