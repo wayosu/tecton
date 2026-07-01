@@ -61,3 +61,16 @@ export const resetTokens = sqliteTable('reset_tokens', {
     .notNull()
     .$defaultFn(() => new Date()),
 });
+
+// Analytics events for dashboard charts and activity tracking
+export const analyticsEvents = sqliteTable('analytics_events', {
+  id: text('id').primaryKey(),
+  type: text('type', {
+    enum: ['signup', 'login', 'logout', 'page_view'],
+  }).notNull(),
+  userId: text('user_id').references(() => users.id, { onDelete: 'set null' }),
+  metadata: text('metadata'),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .$defaultFn(() => new Date()),
+});
