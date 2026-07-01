@@ -20,7 +20,7 @@ export default async function ResetPasswordPage() {
           <CardDescription>Enter your new password</CardDescription>
         </CardHeader>
         <CardContent>
-          <Suspense fallback={<div className="h-40 animate-pulse rounded-md bg-muted" />}>
+          <Suspense fallback={<div className="bg-muted h-40 animate-pulse rounded-md" />}>
             <ResetPasswordFormWrapper />
           </Suspense>
         </CardContent>

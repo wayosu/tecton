@@ -11,11 +11,11 @@
 
 ## Screenshots
 
-> *Screenshots coming soon! Run `npm run dev` to see the dashboard in action.*
+> _Screenshots coming soon! Run `npm run dev` to see the dashboard in action._
 
-| Desktop | Mobile |
-|---------|--------|
-| *Dashboard with sidebar expanded* | *Responsive mobile drawer* |
+| Desktop                           | Mobile                     |
+| --------------------------------- | -------------------------- |
+| _Dashboard with sidebar expanded_ | _Responsive mobile drawer_ |
 
 ## ✨ Features
 
@@ -60,9 +60,9 @@ Open [http://localhost:3000](http://localhost:3000) — you'll be redirected to 
 
 ### Default Accounts
 
-| Email | Password | Role |
-|---|---|---|
-| admin@tecton.dev | admin123 | Admin |
+| Email             | Password | Role   |
+| ----------------- | -------- | ------ |
+| admin@tecton.dev  | admin123 | Admin  |
 | editor@tecton.dev | admin123 | Editor |
 | viewer@tecton.dev | admin123 | Viewer |
 
@@ -88,17 +88,17 @@ src/
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 16 (App Router) |
-| Language | TypeScript (strict) |
-| UI | shadcn/ui + Tailwind CSS v4 |
-| Auth | NextAuth.js v5 (Auth.js) |
-| Database | SQLite (Drizzle ORM) |
-| State | Zustand + TanStack Query |
-| Forms | react-hook-form + Zod |
-| Charts | Recharts |
-| Icons | Lucide React |
+| Layer     | Technology                  |
+| --------- | --------------------------- |
+| Framework | Next.js 16 (App Router)     |
+| Language  | TypeScript (strict)         |
+| UI        | shadcn/ui + Tailwind CSS v4 |
+| Auth      | NextAuth.js v5 (Auth.js)    |
+| Database  | SQLite (Drizzle ORM)        |
+| State     | Zustand + TanStack Query    |
+| Forms     | react-hook-form + Zod       |
+| Charts    | Recharts                    |
+| Icons     | Lucide React                |
 
 ## 🔧 Scripts
 

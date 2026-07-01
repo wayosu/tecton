@@ -15,38 +15,19 @@ interface EmptyStateProps {
   className?: string;
 }
 
-export function EmptyState({
-  icon,
-  title,
-  description,
-  action,
-  className,
-}: EmptyStateProps) {
+export function EmptyState({ icon, title, description, action, className }: EmptyStateProps) {
   return (
     <div
       className={cn(
-        'flex flex-col items-center justify-center rounded-lg border border-dashed bg-muted/30 px-6 py-16 text-center',
+        'bg-muted/30 flex flex-col items-center justify-center rounded-lg border border-dashed px-6 py-16 text-center',
         className,
       )}
     >
-      {icon && (
-        <div className="mb-4 rounded-full bg-muted p-3">
-          {icon}
-        </div>
-      )}
+      {icon && <div className="bg-muted mb-4 rounded-full p-3">{icon}</div>}
       <h3 className="text-sm font-semibold">{title}</h3>
-      {description && (
-        <p className="mt-1 max-w-sm text-xs text-muted-foreground">
-          {description}
-        </p>
-      )}
+      {description && <p className="text-muted-foreground mt-1 max-w-sm text-xs">{description}</p>}
       {action && (
-        <Button
-          variant="outline"
-          size="sm"
-          className="mt-4"
-          onClick={action.onClick}
-        >
+        <Button variant="outline" size="sm" className="mt-4" onClick={action.onClick}>
           {action.label}
         </Button>
       )}

@@ -18,17 +18,15 @@ export function Breadcrumbs() {
   if (segments.length === 0) return null;
 
   const items: BreadcrumbItem[] = segments.map((segment, index) => ({
-    label: segment
-      .replace(/-/g, ' ')
-      .replace(/\b\w/g, (c) => c.toUpperCase()),
+    label: segment.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
     href: '/' + segments.slice(0, index + 1).join('/'),
   }));
 
   return (
-    <nav aria-label="Breadcrumb" className="flex items-center gap-1 text-xs text-muted-foreground">
+    <nav aria-label="Breadcrumb" className="text-muted-foreground flex items-center gap-1 text-xs">
       <Link
         href="/dashboard"
-        className="flex items-center gap-1 hover:text-foreground transition-colors"
+        className="hover:text-foreground flex items-center gap-1 transition-colors"
       >
         <Home className="h-3.5 w-3.5" />
       </Link>
@@ -41,10 +39,7 @@ export function Breadcrumbs() {
             {isLast ? (
               <span className="text-foreground font-medium">{item.label}</span>
             ) : (
-              <Link
-                href={item.href!}
-                className="hover:text-foreground transition-colors"
-              >
+              <Link href={item.href!} className="hover:text-foreground transition-colors">
                 {item.label}
               </Link>
             )}

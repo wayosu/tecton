@@ -23,11 +23,7 @@ async function seed() {
   let skipped = 0;
 
   for (const user of seedUsers) {
-    const existing = db
-      .select()
-      .from(users)
-      .where(eq(users.email, user.email))
-      .get();
+    const existing = db.select().from(users).where(eq(users.email, user.email)).get();
 
     if (existing) {
       console.log(`   ⏭️  Skipped ${user.email} (already exists)`);

@@ -79,9 +79,7 @@ export function UserFormDialog({
   }, [open, user, reset]);
 
   const availableRoles: { value: Role; label: string }[] =
-    currentUserRole === 'admin'
-      ? ROLES
-      : ROLES.filter((r) => r.value !== 'admin');
+    currentUserRole === 'admin' ? ROLES : ROLES.filter((r) => r.value !== 'admin');
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -111,9 +109,7 @@ export function UserFormDialog({
               {...register('name')}
               aria-invalid={!!errors.name}
             />
-            {errors.name && (
-              <p className="text-xs text-destructive">{errors.name.message}</p>
-            )}
+            {errors.name && <p className="text-destructive text-xs">{errors.name.message}</p>}
           </div>
 
           <div className="space-y-2">
@@ -125,9 +121,7 @@ export function UserFormDialog({
               {...register('email')}
               aria-invalid={!!errors.email}
             />
-            {errors.email && (
-              <p className="text-xs text-destructive">{errors.email.message}</p>
-            )}
+            {errors.email && <p className="text-destructive text-xs">{errors.email.message}</p>}
           </div>
 
           <div className="space-y-2">
@@ -142,9 +136,7 @@ export function UserFormDialog({
               aria-invalid={!!errors.password}
             />
             {errors.password && (
-              <p className="text-xs text-destructive">
-                {errors.password.message}
-              </p>
+              <p className="text-destructive text-xs">{errors.password.message}</p>
             )}
           </div>
 
@@ -168,9 +160,7 @@ export function UserFormDialog({
                 </Select>
               )}
             />
-            {errors.role && (
-              <p className="text-xs text-destructive">{errors.role.message}</p>
-            )}
+            {errors.role && <p className="text-destructive text-xs">{errors.role.message}</p>}
           </div>
         </form>
 

@@ -20,11 +20,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Look up the reset token
-    const resetToken = db
-      .select()
-      .from(resetTokens)
-      .where(eq(resetTokens.token, token))
-      .get();
+    const resetToken = db.select().from(resetTokens).where(eq(resetTokens.token, token)).get();
 
     if (!resetToken) {
       return NextResponse.json({ error: 'Invalid or expired reset link' }, { status: 400 });
@@ -47,10 +43,7 @@ export async function POST(request: NextRequest) {
       .run();
 
     // Mark token as used
-    db.update(resetTokens)
-      .set({ used: true })
-      .where(eq(resetTokens.token, token))
-      .run();
+    db.update(resetTokens).set({ used: true }).where(eq(resetTokens.token, token)).run();
 
     return NextResponse.json({ message: 'Password has been reset successfully' });
   } catch {

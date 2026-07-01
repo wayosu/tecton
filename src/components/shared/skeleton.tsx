@@ -1,17 +1,12 @@
 import { cn } from '@/lib/utils';
 
 function Skeleton({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return (
-    <div
-      className={cn('animate-pulse rounded-md bg-muted', className)}
-      {...props}
-    />
-  );
+  return <div className={cn('bg-muted animate-pulse rounded-md', className)} {...props} />;
 }
 
 function SkeletonCard() {
   return (
-    <div className="rounded-lg border bg-card p-6 space-y-4">
+    <div className="bg-card space-y-4 rounded-lg border p-6">
       <Skeleton className="h-4 w-3/4" />
       <Skeleton className="h-8 w-1/2" />
       <Skeleton className="h-3 w-full" />
@@ -23,10 +18,7 @@ function SkeletonRow({ cols = 4 }: { cols?: number }) {
   return (
     <div className="flex items-center gap-4 py-3">
       {Array.from({ length: cols }).map((_, i) => (
-        <Skeleton
-          key={i}
-          className={cn('h-4', i === 0 ? 'w-32' : 'flex-1')}
-        />
+        <Skeleton key={i} className={cn('h-4', i === 0 ? 'w-32' : 'flex-1')} />
       ))}
     </div>
   );

@@ -1,9 +1,4 @@
-import {
-  LayoutDashboard,
-  Users,
-  Settings,
-  type LucideIcon,
-} from 'lucide-react';
+import { LayoutDashboard, Users, Settings, type LucideIcon } from 'lucide-react';
 import type { Permission } from '@/lib/rbac';
 
 export interface NavItem {

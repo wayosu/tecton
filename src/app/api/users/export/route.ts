@@ -20,9 +20,7 @@ export async function GET(request: NextRequest) {
   if (search) {
     const s = search.toLowerCase();
     filtered = allUsers.filter(
-      (u) =>
-        u.name?.toLowerCase().includes(s) ||
-        u.email.toLowerCase().includes(s),
+      (u) => u.name?.toLowerCase().includes(s) || u.email.toLowerCase().includes(s),
     );
   }
 

@@ -22,10 +22,7 @@ export function hasPermission(role: Role | undefined, permission: Permission): b
   return permissions[permission].includes(role);
 }
 
-export function hasMinRole(
-  userRole: Role | undefined,
-  requiredRole: Role,
-): boolean {
+export function hasMinRole(userRole: Role | undefined, requiredRole: Role): boolean {
   if (!userRole) return false;
   return ROLES[userRole].level >= ROLES[requiredRole].level;
 }

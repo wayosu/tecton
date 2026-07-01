@@ -25,15 +25,11 @@ export function PasswordForm() {
   );
 
   return (
-    <div className="rounded-lg border bg-card">
+    <div className="bg-card rounded-lg border">
       <div className="border-b px-4 py-3">
         <h3 className="text-sm font-semibold">Change Password</h3>
       </div>
-      <form
-        id="password-form"
-        action={formAction}
-        className="space-y-4 p-4"
-      >
+      <form id="password-form" action={formAction} className="space-y-4 p-4">
         <div className="space-y-2">
           <Label htmlFor="settings-current-password">Current Password</Label>
           <Input

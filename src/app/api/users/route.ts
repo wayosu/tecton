@@ -35,9 +35,7 @@ export async function GET(request: NextRequest) {
   if (search) {
     const s = search.toLowerCase();
     filtered = safeUsers.filter(
-      (u) =>
-        u.name?.toLowerCase().includes(s) ||
-        u.email.toLowerCase().includes(s),
+      (u) => u.name?.toLowerCase().includes(s) || u.email.toLowerCase().includes(s),
     );
   }
 
@@ -88,24 +86,14 @@ export async function POST(request: NextRequest) {
 
   // Editor can only create viewer/editor, not admin
   if (currentUserRole === 'editor' && newRole === 'admin') {
-    return NextResponse.json(
-      { error: 'Editors cannot create admin users' },
-      { status: 403 },
-    );
+    return NextResponse.json({ error: 'Editors cannot create admin users' }, { status: 403 });
   }
 
   // Check email uniqueness
-  const existing = db
-    .select()
-    .from(users)
-    .where(eq(users.email, email))
-    .get();
+  const existing = db.select().from(users).where(eq(users.email, email)).get();
 
   if (existing) {
-    return NextResponse.json(
-      { error: 'Email already exists' },
-      { status: 409 },
-    );
+    return NextResponse.json({ error: 'Email already exists' }, { status: 409 });
   }
 
   const id = uuidv4();
@@ -124,11 +112,7 @@ export async function POST(request: NextRequest) {
     })
     .run();
 
-  const created = db
-    .select()
-    .from(users)
-    .where(eq(users.id, id))
-    .get();
+  const created = db.select().from(users).where(eq(users.id, id)).get();
 
   const { hashedPassword: _, ...safeUser } = created!;
 

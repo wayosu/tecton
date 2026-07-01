@@ -23,11 +23,7 @@ const providers: Provider[] = [
         password: string;
       };
 
-      const user = db
-        .select()
-        .from(users)
-        .where(eq(users.email, email))
-        .get();
+      const user = db.select().from(users).where(eq(users.email, email)).get();
 
       if (!user || !user.hashedPassword) return null;
 

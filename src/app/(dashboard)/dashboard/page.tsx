@@ -24,7 +24,7 @@ export default async function DashboardPage() {
       value: stats.totalUsers.toLocaleString(),
       icon: Users,
       change: `+${stats.totalUsers > 0 ? Math.round((stats.usersByRole.length / stats.totalUsers) * 100) : 0}%`,
-      trend: stats.totalUsers > 0 ? 'up' as const : 'down' as const,
+      trend: stats.totalUsers > 0 ? ('up' as const) : ('down' as const),
     },
     {
       title: 'Revenue',
@@ -42,7 +42,11 @@ export default async function DashboardPage() {
     },
     {
       title: 'Users by Role',
-      value: String(stats.usersByRole.length > 0 ? stats.usersByRole.map(r => r.count).reduce((a, b) => a + b) : 0),
+      value: String(
+        stats.usersByRole.length > 0
+          ? stats.usersByRole.map((r) => r.count).reduce((a, b) => a + b)
+          : 0,
+      ),
       icon: ShoppingCart,
       change: `${stats.usersByRole.length} roles`,
       trend: 'up' as const,
@@ -69,14 +73,12 @@ export default async function DashboardPage() {
           return (
             <div
               key={stat.title}
-              className="group rounded-lg border bg-card p-4 transition-colors hover:border-primary/20"
+              className="group bg-card hover:border-primary/20 rounded-lg border p-4 transition-colors"
             >
               <div className="flex items-center justify-between">
-                <span className="text-xs font-medium text-muted-foreground">
-                  {stat.title}
-                </span>
-                <div className="rounded-md bg-muted p-1.5 transition-colors group-hover:bg-primary/10">
-                  <Icon className="h-4 w-4 text-muted-foreground group-hover:text-primary" />
+                <span className="text-muted-foreground text-xs font-medium">{stat.title}</span>
+                <div className="bg-muted group-hover:bg-primary/10 rounded-md p-1.5 transition-colors">
+                  <Icon className="text-muted-foreground group-hover:text-primary h-4 w-4" />
                 </div>
               </div>
               <div className="mt-3 flex items-baseline gap-2">
@@ -103,7 +105,7 @@ export default async function DashboardPage() {
       {/* Content Row */}
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Quick Actions */}
-        <div className="rounded-lg border bg-card">
+        <div className="bg-card rounded-lg border">
           <div className="border-b px-4 py-3">
             <H3>Quick Actions</H3>
           </div>
@@ -117,7 +119,7 @@ export default async function DashboardPage() {
               <a
                 key={item.label}
                 href={item.href}
-                className="flex items-center gap-2 rounded-md border bg-muted/30 px-3 py-2.5 text-xs font-medium transition-colors hover:border-primary/30 hover:bg-muted"
+                className="bg-muted/30 hover:border-primary/30 hover:bg-muted flex items-center gap-2 rounded-md border px-3 py-2.5 text-xs font-medium transition-colors"
               >
                 {item.label}
               </a>
@@ -126,7 +128,7 @@ export default async function DashboardPage() {
         </div>
 
         {/* Recent User Activity */}
-        <div className="rounded-lg border bg-card">
+        <div className="bg-card rounded-lg border">
           <div className="border-b px-4 py-3">
             <H3>Recent Users</H3>
           </div>
@@ -134,10 +136,10 @@ export default async function DashboardPage() {
             {recentActivity.length > 0 ? (
               recentActivity.map((item, i) => (
                 <div key={i} className="flex items-center gap-3 px-4 py-2.5">
-                  <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-muted text-[11px] font-medium uppercase">
+                  <div className="bg-muted flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-medium uppercase">
                     {item.initials}
                   </div>
-                  <div className="flex-1 min-w-0">
+                  <div className="min-w-0 flex-1">
                     <p className="text-xs">
                       <span className="font-medium">{item.name}</span>{' '}
                       <span className="text-muted-foreground">{item.action}</span>
@@ -147,7 +149,7 @@ export default async function DashboardPage() {
                 </div>
               ))
             ) : (
-              <div className="px-4 py-6 text-center text-xs text-muted-foreground">
+              <div className="text-muted-foreground px-4 py-6 text-center text-xs">
                 No users yet. Seed the database to see activity.
               </div>
             )}

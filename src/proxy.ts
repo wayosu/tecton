@@ -7,9 +7,7 @@ export const proxy = auth((req) => {
 
   // Public routes
   const publicPaths = ['/login', '/register'];
-  const isPublicPath = publicPaths.some(
-    (path) => pathname === path || pathname.startsWith(path),
-  );
+  const isPublicPath = publicPaths.some((path) => pathname === path || pathname.startsWith(path));
 
   // Redirect logged-in users away from auth pages
   if (isLoggedIn && isPublicPath) {

@@ -23,6 +23,7 @@ A clear description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Environment (please complete):**
+
 - OS: [e.g. macOS, Linux, Windows]
 - Browser: [e.g. Chrome, Safari, Firefox]
 - Node.js version: [e.g. 22]

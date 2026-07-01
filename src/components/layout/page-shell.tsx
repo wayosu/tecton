@@ -16,9 +16,7 @@ export function PageShell({ title, description, children, action }: PageShellPro
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-1">
             <H1>{title}</H1>
-            {description && (
-              <p className="text-sm text-muted-foreground">{description}</p>
-            )}
+            {description && <p className="text-muted-foreground text-sm">{description}</p>}
           </div>
           {action && <div className="shrink-0">{action}</div>}
         </div>

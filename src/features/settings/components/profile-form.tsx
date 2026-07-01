@@ -27,7 +27,7 @@ export function ProfileForm({ defaultName, defaultEmail }: ProfileFormProps) {
   );
 
   return (
-    <div className="rounded-lg border bg-card">
+    <div className="bg-card rounded-lg border">
       <div className="border-b px-4 py-3">
         <h3 className="text-sm font-semibold">Profile</h3>
       </div>

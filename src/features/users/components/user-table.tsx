@@ -40,11 +40,7 @@ import { UserRowActions } from './user-row-actions';
 import { UserToolbar } from './user-toolbar';
 import { UserFormDialog } from './user-form-dialog';
 import { UserDeleteDialog } from './user-delete-dialog';
-import {
-  useCreateUser,
-  useUpdateUser,
-  useDeleteUser,
-} from '../hooks/use-user-mutations';
+import { useCreateUser, useUpdateUser, useDeleteUser } from '../hooks/use-user-mutations';
 import { Skeleton } from '@/components/shared/skeleton';
 import { EmptyState } from '@/components/shared/empty-state';
 import { hasPermission } from '@/lib/rbac';
@@ -65,9 +61,7 @@ export function UserTable({ currentUserRole }: UserTableProps) {
   const [search, setSearch] = useState('');
 
   // Dialog state
-  const [dialogMode, setDialogMode] = useState<
-    'create' | 'edit' | 'delete' | null
-  >(null);
+  const [dialogMode, setDialogMode] = useState<'create' | 'edit' | 'delete' | null>(null);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   const sort = (sorting[0]?.id ?? 'createdAt') as keyof User;
@@ -126,14 +120,13 @@ export function UserTable({ currentUserRole }: UserTableProps) {
   // Error state
   if (isError) {
     return (
-      <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-6 text-center">
-        <p className="text-sm text-destructive">Failed to load users.</p>
+      <div className="border-destructive/30 bg-destructive/5 rounded-lg border p-6 text-center">
+        <p className="text-destructive text-sm">Failed to load users.</p>
       </div>
     );
   }
 
-  const showAddButton =
-    currentUserRole && hasPermission(currentUserRole, 'users:create');
+  const showAddButton = currentUserRole && hasPermission(currentUserRole, 'users:create');
 
   return (
     <div className="space-y-4">
@@ -172,25 +165,18 @@ export function UserTable({ currentUserRole }: UserTableProps) {
                   <TableHead
                     key={header.id}
                     style={{
-                      width:
-                        header.getSize() !== 150
-                          ? header.getSize()
-                          : undefined,
+                      width: header.getSize() !== 150 ? header.getSize() : undefined,
                     }}
                     className={cn(
-                      'h-10 text-xs font-medium text-muted-foreground',
-                      header.column.getCanSort() &&
-                        'cursor-pointer select-none',
+                      'text-muted-foreground h-10 text-xs font-medium',
+                      header.column.getCanSort() && 'cursor-pointer select-none',
                     )}
                     onClick={header.column.getToggleSortingHandler()}
                   >
                     <div className="flex items-center gap-1">
                       {header.isPlaceholder
                         ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext(),
-                          )}
+                        : flexRender(header.column.columnDef.header, header.getContext())}
                       {header.column.getCanSort() && (
                         <span className="ml-1">
                           {{
@@ -213,12 +199,7 @@ export function UserTable({ currentUserRole }: UserTableProps) {
                 <TableRow key={i}>
                   {Array.from({ length: 5 }).map((_, j) => (
                     <TableCell key={j} className="py-3">
-                      <Skeleton
-                        className={cn(
-                          'h-4',
-                          j === 0 ? 'w-32' : 'w-full',
-                        )}
-                      />
+                      <Skeleton className={cn('h-4', j === 0 ? 'w-32' : 'w-full')} />
                     </TableCell>
                   ))}
                 </TableRow>
@@ -227,9 +208,7 @@ export function UserTable({ currentUserRole }: UserTableProps) {
               <TableRow>
                 <TableCell colSpan={allColumns.length} className="h-32">
                   <EmptyState
-                    icon={
-                      <Users className="h-6 w-6 text-muted-foreground" />
-                    }
+                    icon={<Users className="text-muted-foreground h-6 w-6" />}
                     title={search ? 'No users found' : 'No users yet'}
                     description={
                       search
@@ -245,10 +224,7 @@ export function UserTable({ currentUserRole }: UserTableProps) {
                 <TableRow key={row.id}>
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id} className="py-3">
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext(),
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -262,9 +238,7 @@ export function UserTable({ currentUserRole }: UserTableProps) {
       {data && data.totalPages > 0 && (
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">
-              Rows per page
-            </span>
+            <span className="text-muted-foreground text-xs">Rows per page</span>
             <Select
               value={String(limit)}
               onValueChange={(v) => {
@@ -286,7 +260,7 @@ export function UserTable({ currentUserRole }: UserTableProps) {
           </div>
 
           <div className="flex items-center gap-3">
-            <span className="text-xs text-muted-foreground tabular-nums">
+            <span className="text-muted-foreground text-xs tabular-nums">
               Page {data.page} of {data.totalPages}
             </span>
             <div className="flex items-center gap-1">
@@ -303,9 +277,7 @@ export function UserTable({ currentUserRole }: UserTableProps) {
                 variant="outline"
                 size="icon"
                 className="h-8 w-8"
-                onClick={() =>
-                  setPage((p) => Math.min(data.totalPages, p + 1))
-                }
+                onClick={() => setPage((p) => Math.min(data.totalPages, p + 1))}
                 disabled={page >= data.totalPages}
               >
                 <ChevronRight className="h-4 w-4" />

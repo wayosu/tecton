@@ -40,11 +40,7 @@ export function UserDeleteDialog({
         </DialogHeader>
 
         <DialogFooter showCloseButton>
-          <Button
-            variant="destructive"
-            onClick={() => onConfirm(user)}
-            disabled={loading}
-          >
+          <Button variant="destructive" onClick={() => onConfirm(user)} disabled={loading}>
             {loading ? 'Deleting...' : 'Delete'}
           </Button>
         </DialogFooter>

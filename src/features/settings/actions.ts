@@ -25,11 +25,7 @@ export async function updateProfile(formData: FormData) {
   }
 
   // Check email uniqueness
-  const existing = db
-    .select()
-    .from(users)
-    .where(eq(users.email, parsed.data.email))
-    .get();
+  const existing = db.select().from(users).where(eq(users.email, parsed.data.email)).get();
 
   if (existing && existing.id !== session.user.id) {
     return { error: 'Email already in use by another account' };
@@ -71,11 +67,7 @@ export async function updatePassword(formData: FormData) {
   }
 
   // Verify current password
-  const user = db
-    .select()
-    .from(users)
-    .where(eq(users.id, session.user.id))
-    .get();
+  const user = db.select().from(users).where(eq(users.id, session.user.id)).get();
 
   if (!user || !user.hashedPassword) {
     return { error: 'Account not found' };

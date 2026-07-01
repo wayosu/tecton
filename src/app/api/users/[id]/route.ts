@@ -8,10 +8,7 @@ import { hash } from 'bcryptjs';
 import { eq } from 'drizzle-orm';
 import type { Role } from '@/lib/rbac';
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session?.user?.role || !hasPermission(session.user.role, 'users:update')) {
     return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -41,32 +38,19 @@ export async function PATCH(
 
   // Prevent self-demotion
   if (id === sessionUserId && target.role === 'admin' && newRole !== 'admin') {
-    return NextResponse.json(
-      { error: 'Cannot change your own admin role' },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: 'Cannot change your own admin role' }, { status: 400 });
   }
 
   // Editor can only set viewer/editor roles
   if (currentUserRole === 'editor' && newRole === 'admin') {
-    return NextResponse.json(
-      { error: 'Editors cannot assign admin role' },
-      { status: 403 },
-    );
+    return NextResponse.json({ error: 'Editors cannot assign admin role' }, { status: 403 });
   }
 
   // Check email uniqueness (exclude self)
   if (email !== target.email) {
-    const existing = db
-      .select()
-      .from(users)
-      .where(eq(users.email, email))
-      .get();
+    const existing = db.select().from(users).where(eq(users.email, email)).get();
     if (existing) {
-      return NextResponse.json(
-        { error: 'Email already exists' },
-        { status: 409 },
-      );
+      return NextResponse.json({ error: 'Email already exists' }, { status: 409 });
     }
   }
 
@@ -104,10 +88,7 @@ export async function DELETE(
 
   // Cannot delete self
   if (id === sessionUserId) {
-    return NextResponse.json(
-      { error: 'Cannot delete your own account' },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: 'Cannot delete your own account' }, { status: 400 });
   }
 
   const target = db.select().from(users).where(eq(users.id, id)).get();

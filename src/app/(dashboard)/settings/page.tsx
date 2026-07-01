@@ -9,27 +9,20 @@ export default async function SettingsPage() {
   const role = session?.user?.role;
 
   return (
-    <PageShell
-      title="Settings"
-      description="Manage your account and application preferences."
-    >
-      <div className="grid gap-4 max-w-2xl">
+    <PageShell title="Settings" description="Manage your account and application preferences.">
+      <div className="grid max-w-2xl gap-4">
         {/* Profile Header */}
-        <div className="rounded-lg border bg-card">
+        <div className="bg-card rounded-lg border">
           <div className="border-b px-4 py-3">
             <h3 className="text-sm font-semibold">Account</h3>
           </div>
-          <div className="p-4 flex items-center gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-medium">
+          <div className="flex items-center gap-3 p-4">
+            <div className="bg-muted flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-sm font-medium">
               {session?.user?.name?.[0]?.toUpperCase() || 'U'}
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium">
-                {session?.user?.name || 'Unknown User'}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {session?.user?.email}
-              </p>
+              <p className="text-sm font-medium">{session?.user?.name || 'Unknown User'}</p>
+              <p className="text-muted-foreground text-xs">{session?.user?.email}</p>
             </div>
             <StatusBadge variant="default" dot className="ml-auto">
               {role}
@@ -47,29 +40,26 @@ export default async function SettingsPage() {
         <PasswordForm />
 
         {/* Appearance */}
-        <div className="rounded-lg border bg-card">
+        <div className="bg-card rounded-lg border">
           <div className="border-b px-4 py-3">
             <h3 className="text-sm font-semibold">Appearance</h3>
           </div>
           <div className="p-4">
-            <p className="text-sm text-muted-foreground">
-              Toggle between light and dark mode using the sun/moon icon in the
-              header. Your preference is saved automatically.
+            <p className="text-muted-foreground text-sm">
+              Toggle between light and dark mode using the sun/moon icon in the header. Your
+              preference is saved automatically.
             </p>
           </div>
         </div>
 
         {/* Danger Zone */}
-        <div className="rounded-lg border border-destructive/30 bg-card">
-          <div className="border-b border-destructive/20 px-4 py-3">
-            <h3 className="text-sm font-semibold text-destructive">
-              Danger Zone
-            </h3>
+        <div className="border-destructive/30 bg-card rounded-lg border">
+          <div className="border-destructive/20 border-b px-4 py-3">
+            <h3 className="text-destructive text-sm font-semibold">Danger Zone</h3>
           </div>
           <div className="p-4">
-            <p className="text-sm text-muted-foreground">
-              Destructive actions like account deletion or data reset will
-              appear here.
+            <p className="text-muted-foreground text-sm">
+              Destructive actions like account deletion or data reset will appear here.
             </p>
           </div>
         </div>

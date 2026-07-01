@@ -97,7 +97,7 @@ export function LoginForm() {
           <span className="w-full border-t" />
         </div>
         <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">Or</span>
+          <span className="bg-background text-muted-foreground px-2">Or</span>
         </div>
       </div>
 
@@ -126,17 +126,22 @@ export function LoginForm() {
         </div>
         <div className="flex items-center justify-between">
           <label className="flex items-center gap-2 text-sm">
-            <input type="checkbox" name="remember" defaultChecked className="h-4 w-4 rounded border-muted-foreground/30" />
+            <input
+              type="checkbox"
+              name="remember"
+              defaultChecked
+              className="border-muted-foreground/30 h-4 w-4 rounded"
+            />
             Remember me
           </label>
-          <Link href="/forgot-password" className="text-xs text-primary hover:underline">
+          <Link href="/forgot-password" className="text-primary text-xs hover:underline">
             Forgot password?
           </Link>
         </div>
         <Button type="submit" className="w-full" disabled={loading || oauthLoading !== null}>
           {loading ? 'Signing in...' : 'Sign in'}
         </Button>
-        <p className="text-center text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-center text-sm">
           Don&apos;t have an account?{' '}
           <Link href="/register" className="text-primary hover:underline">
             Register

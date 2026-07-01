@@ -19,12 +19,7 @@ interface UserRowActionsProps {
   onDelete: (user: User) => void;
 }
 
-export function UserRowActions({
-  user,
-  currentUserRole,
-  onEdit,
-  onDelete,
-}: UserRowActionsProps) {
+export function UserRowActions({ user, currentUserRole, onEdit, onDelete }: UserRowActionsProps) {
   const canUpdate = hasPermission(currentUserRole, 'users:update');
   const canDelete = hasPermission(currentUserRole, 'users:delete');
 
@@ -32,20 +27,13 @@ export function UserRowActions({
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger
-        render={
-          <Button variant="ghost" size="icon" className="h-8 w-8" />
-        }
-      >
+      <DropdownMenuTrigger render={<Button variant="ghost" size="icon" className="h-8 w-8" />}>
         <MoreHorizontal className="h-4 w-4" />
         <span className="sr-only">Open menu</span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-36">
         {canUpdate && (
-          <DropdownMenuItem
-            onClick={() => onEdit?.(user)}
-            className="cursor-pointer text-xs"
-          >
+          <DropdownMenuItem onClick={() => onEdit?.(user)} className="cursor-pointer text-xs">
             <Pencil className="mr-2 h-3.5 w-3.5" />
             Edit
           </DropdownMenuItem>
@@ -53,7 +41,7 @@ export function UserRowActions({
         {canDelete && (
           <DropdownMenuItem
             onClick={() => onDelete?.(user)}
-            className="cursor-pointer text-xs text-destructive"
+            className="text-destructive cursor-pointer text-xs"
           >
             <Trash2 className="mr-2 h-3.5 w-3.5" />
             Delete

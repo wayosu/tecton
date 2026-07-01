@@ -8,10 +8,7 @@ export default async function UsersPage() {
   const role = session?.user?.role;
 
   return (
-    <PageShell
-      title="Users"
-      description="Manage user accounts, roles, and permissions."
-    >
+    <PageShell title="Users" description="Manage user accounts, roles, and permissions.">
       <UserTable currentUserRole={role} />
     </PageShell>
   );

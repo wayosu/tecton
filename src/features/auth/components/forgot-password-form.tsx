@@ -41,16 +41,27 @@ export function ForgotPasswordForm() {
   if (sent) {
     return (
       <div className="space-y-4 text-center">
-        <div className="rounded-full bg-primary/10 p-3 mx-auto w-fit">
-          <svg className="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+        <div className="bg-primary/10 mx-auto w-fit rounded-full p-3">
+          <svg
+            className="text-primary h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75"
+            />
           </svg>
         </div>
         <h2 className="text-lg font-semibold">Check your email</h2>
-        <p className="text-sm text-muted-foreground">
-          If an account with that email exists, we've sent a password reset link. In development mode, check the server console.
+        <p className="text-muted-foreground text-sm">
+          If an account with that email exists, we&apos;ve sent a password reset link. In
+          development mode, check the server console.
         </p>
-        <Link href="/login" className="block text-sm text-primary hover:underline">
+        <Link href="/login" className="text-primary block text-sm hover:underline">
           Back to sign in
         </Link>
       </div>
@@ -73,7 +84,7 @@ export function ForgotPasswordForm() {
       <Button type="submit" className="w-full" disabled={loading}>
         {loading ? 'Sending...' : 'Send reset link'}
       </Button>
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-center text-sm">
         Remember your password?{' '}
         <Link href="/login" className="text-primary hover:underline">
           Sign in

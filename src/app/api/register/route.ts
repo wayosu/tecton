@@ -5,11 +5,7 @@ import { db } from '@/lib/db';
 import { users, verificationTokens } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { v4 as uuid } from 'uuid';
-import {
-  registerLimiter,
-  checkRateLimit,
-  getClientIP,
-} from '@/lib/rate-limit';
+import { registerLimiter, checkRateLimit, getClientIP } from '@/lib/rate-limit';
 
 const registerSchema = z.object({
   name: z.string().max(100).optional(),
@@ -37,39 +33,28 @@ export async function POST(request: NextRequest) {
     // Zod validation
     const parsed = registerSchema.safeParse(body);
     if (!parsed.success) {
-      const firstError = Object.values(parsed.error.flatten().fieldErrors)
-        .flat()[0];
-      return NextResponse.json(
-        { error: firstError || 'Validation failed' },
-        { status: 400 },
-      );
+      const firstError = Object.values(parsed.error.flatten().fieldErrors).flat()[0];
+      return NextResponse.json({ error: firstError || 'Validation failed' }, { status: 400 });
     }
 
     const { name, email, password } = parsed.data;
 
     // Check existing user
-    const existing = db
-      .select({ id: users.id })
-      .from(users)
-      .where(eq(users.email, email))
-      .get();
+    const existing = db.select({ id: users.id }).from(users).where(eq(users.email, email)).get();
 
     if (existing) {
-      return NextResponse.json(
-        { error: 'Email already registered' },
-        { status: 409 },
-      );
+      return NextResponse.json({ error: 'Email already registered' }, { status: 409 });
     }
 
     const hashedPassword = await hash(password, 12);
     db.insert(users)
       .values({
-      id: uuid(),
-      name: name || null,
-      email,
-      hashedPassword,
-      emailVerified: new Date(),
-      role: 'viewer',
+        id: uuid(),
+        name: name || null,
+        email,
+        hashedPassword,
+        emailVerified: new Date(),
+        role: 'viewer',
       })
       .run();
 
@@ -92,9 +77,6 @@ export async function POST(request: NextRequest) {
       { status: 201 },
     );
   } catch {
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }

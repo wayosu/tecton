@@ -13,12 +13,12 @@ export function getUserColumns(userRole?: Role): ColumnDef<User>[] {
       header: 'Name',
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted text-xs font-medium">
+          <div className="bg-muted flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-medium">
             {row.original.name?.[0]?.toUpperCase() || '?'}
           </div>
           <div>
             <p className="text-sm font-medium">{row.original.name || '—'}</p>
-            <p className="text-xs text-muted-foreground">{row.original.email}</p>
+            <p className="text-muted-foreground text-xs">{row.original.email}</p>
           </div>
         </div>
       ),
@@ -27,9 +27,7 @@ export function getUserColumns(userRole?: Role): ColumnDef<User>[] {
     {
       accessorKey: 'email',
       header: 'Email',
-      cell: ({ getValue }) => (
-        <span className="text-sm">{getValue<string>()}</span>
-      ),
+      cell: ({ getValue }) => <span className="text-sm">{getValue<string>()}</span>,
       enableSorting: true,
       size: 200,
     },
@@ -38,12 +36,7 @@ export function getUserColumns(userRole?: Role): ColumnDef<User>[] {
       header: 'Role',
       cell: ({ getValue }) => {
         const role = getValue<Role>();
-        const variant =
-          role === 'admin'
-            ? 'default'
-            : role === 'editor'
-              ? 'warning'
-              : 'secondary';
+        const variant = role === 'admin' ? 'default' : role === 'editor' ? 'warning' : 'secondary';
         return (
           <StatusBadge variant={variant as 'default' | 'warning' | 'secondary'} dot>
             {role}
@@ -58,9 +51,9 @@ export function getUserColumns(userRole?: Role): ColumnDef<User>[] {
       header: 'Created',
       cell: ({ getValue }) => {
         const date = getValue<Date | string | null>();
-        if (!date) return <span className="text-xs text-muted-foreground">—</span>;
+        if (!date) return <span className="text-muted-foreground text-xs">—</span>;
         return (
-          <span className="text-xs text-muted-foreground">
+          <span className="text-muted-foreground text-xs">
             {format(new Date(date), 'MMM d, yyyy')}
           </span>
         );

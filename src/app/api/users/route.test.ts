@@ -107,7 +107,12 @@ describe('Users API', () => {
       const response = await POST(
         makeRequest('http://localhost/api/users', {
           method: 'POST',
-          body: JSON.stringify({ name: 'New Admin', email: 'na@test.com', password: 'p12345678', role: 'admin' }),
+          body: JSON.stringify({
+            name: 'New Admin',
+            email: 'na@test.com',
+            password: 'p12345678',
+            role: 'admin',
+          }),
         }) as any,
       );
 
@@ -121,7 +126,12 @@ describe('Users API', () => {
       const response = await POST(
         makeRequest('http://localhost/api/users', {
           method: 'POST',
-          body: JSON.stringify({ name: 'Dup', email: 'dup@test.com', password: 'p12345678', role: 'viewer' }),
+          body: JSON.stringify({
+            name: 'Dup',
+            email: 'dup@test.com',
+            password: 'p12345678',
+            role: 'viewer',
+          }),
         }) as any,
       );
 

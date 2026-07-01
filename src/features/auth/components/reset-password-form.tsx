@@ -60,16 +60,22 @@ export function ResetPasswordForm() {
   if (done) {
     return (
       <div className="space-y-4 text-center">
-        <div className="rounded-full bg-emerald-500/10 p-3 mx-auto w-fit">
-          <svg className="h-6 w-6 text-emerald-600" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+        <div className="mx-auto w-fit rounded-full bg-emerald-500/10 p-3">
+          <svg
+            className="h-6 w-6 text-emerald-600"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
           </svg>
         </div>
         <h2 className="text-lg font-semibold">Password reset</h2>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-muted-foreground text-sm">
           Your password has been updated successfully.
         </p>
-        <Link href="/login" className="block text-sm text-primary hover:underline">
+        <Link href="/login" className="text-primary block text-sm hover:underline">
           Sign in with your new password
         </Link>
       </div>
@@ -79,8 +85,10 @@ export function ResetPasswordForm() {
   if (!token) {
     return (
       <div className="space-y-4 text-center">
-        <p className="text-sm text-muted-foreground">Invalid reset link. Please request a new one.</p>
-        <Link href="/forgot-password" className="block text-sm text-primary hover:underline">
+        <p className="text-muted-foreground text-sm">
+          Invalid reset link. Please request a new one.
+        </p>
+        <Link href="/forgot-password" className="text-primary block text-sm hover:underline">
           Request new reset link
         </Link>
       </div>

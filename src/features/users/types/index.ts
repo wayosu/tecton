@@ -24,10 +24,7 @@ export type UsersQueryParams = {
 
 // ── Validation Schemas ──────────────────────
 
-const passwordField = z
-  .string()
-  .min(6, 'Password must be at least 6 characters')
-  .max(100);
+const passwordField = z.string().min(6, 'Password must be at least 6 characters').max(100);
 
 export const userFormSchema = z
   .object({

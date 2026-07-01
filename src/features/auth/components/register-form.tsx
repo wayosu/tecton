@@ -86,7 +86,7 @@ export function RegisterForm() {
       <Button type="submit" className="w-full" disabled={loading}>
         {loading ? 'Creating account...' : 'Create account'}
       </Button>
-      <p className="text-center text-sm text-muted-foreground">
+      <p className="text-muted-foreground text-center text-sm">
         Already have an account?{' '}
         <Link href="/login" className="text-primary hover:underline">
           Sign in

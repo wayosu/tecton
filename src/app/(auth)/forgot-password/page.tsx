@@ -12,7 +12,7 @@ export default async function ForgotPasswordPage() {
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Forgot password?</CardTitle>
-          <CardDescription>Enter your email and we'll send you a reset link</CardDescription>
+          <CardDescription>Enter your email and we&apos;ll send you a reset link</CardDescription>
         </CardHeader>
         <CardContent>
           <ForgotPasswordForm />

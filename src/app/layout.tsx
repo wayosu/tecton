@@ -34,7 +34,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${interSans.variable} ${jetbrainsMono.variable} antialiased`}
     >
-      <body className="min-h-screen bg-background font-sans">
+      <body className="bg-background min-h-screen font-sans">
         <Providers>{children}</Providers>
       </body>
     </html>

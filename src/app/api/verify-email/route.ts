@@ -11,11 +11,7 @@ export async function GET(request: NextRequest) {
   }
 
   // Look up token
-  const vt = db
-    .select()
-    .from(verificationTokens)
-    .where(eq(verificationTokens.token, token))
-    .get();
+  const vt = db.select().from(verificationTokens).where(eq(verificationTokens.token, token)).get();
 
   if (!vt) {
     return NextResponse.json({ error: 'Invalid verification token' }, { status: 400 });
@@ -32,9 +28,7 @@ export async function GET(request: NextRequest) {
     .run();
 
   // Delete used token
-  db.delete(verificationTokens)
-    .where(eq(verificationTokens.token, token))
-    .run();
+  db.delete(verificationTokens).where(eq(verificationTokens.token, token)).run();
 
   return NextResponse.json({ message: 'Email verified successfully' });
 }
