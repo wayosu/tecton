@@ -13,7 +13,7 @@ interface ProfileFormProps {
 }
 
 export function ProfileForm({ defaultName, defaultEmail }: ProfileFormProps) {
-  const [state, formAction, isPending] = useActionState(
+  const [_state, formAction, isPending] = useActionState(
     async (_prev: unknown, formData: FormData) => {
       const result = await updateProfile(formData);
       if (result?.error) {

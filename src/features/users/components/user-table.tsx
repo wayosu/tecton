@@ -1,4 +1,5 @@
 'use client';
+'use no memo'; // TanStack Table uses mutable refs — incompatible with React Compiler
 
 import { useState } from 'react';
 import {
@@ -105,6 +106,7 @@ export function UserTable({ currentUserRole }: UserTableProps) {
     },
   ];
 
+  // eslint-disable-next-line -- TanStack Table uses mutable refs, not compatible with React Compiler
   const table = useReactTable({
     data: data?.data ?? [],
     columns: allColumns,

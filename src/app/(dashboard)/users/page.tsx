@@ -1,7 +1,6 @@
 import { PageShell } from '@/components/layout/page-shell';
 import { UserTable } from '@/features/users/components/user-table';
 import { auth } from '@/auth';
-import type { Role } from '@/lib/rbac';
 
 export default async function UsersPage() {
   const session = await auth();

@@ -6,7 +6,6 @@ import { hasPermission } from '@/lib/rbac';
 import { updateUserSchema } from '@/features/users/types';
 import { hash } from 'bcryptjs';
 import { eq } from 'drizzle-orm';
-import type { Role } from '@/lib/rbac';
 
 export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();

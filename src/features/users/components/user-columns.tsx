@@ -6,7 +6,7 @@ import { StatusBadge } from '@/components/shared/status-badge';
 import { format } from 'date-fns';
 import type { Role } from '@/lib/rbac';
 
-export function getUserColumns(userRole?: Role): ColumnDef<User>[] {
+export function getUserColumns(_userRole?: Role): ColumnDef<User>[] {
   return [
     {
       accessorKey: 'name',

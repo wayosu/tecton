@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
 
 export function PasswordForm() {
-  const [state, formAction, isPending] = useActionState(
+  const [_state, formAction, isPending] = useActionState(
     async (_prev: unknown, formData: FormData) => {
       const result = await updatePassword(formData);
       if (result?.error) {
