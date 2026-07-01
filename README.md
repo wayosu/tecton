@@ -6,7 +6,7 @@
   <img alt="License" src="https://img.shields.io/badge/license-MIT-blue.svg">
   <img alt="Next.js" src="https://img.shields.io/badge/Next.js-16-black">
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-blue">
-  <img alt="Tests" src="https://img.shields.io/badge/tests-22-passing-green">
+  <img alt="Tests" src="https://img.shields.io/badge/tests-passing-green">
 </p>
 
 ## Screenshots
