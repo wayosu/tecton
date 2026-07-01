@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
+import { useEffect } from 'react';
 import { ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -29,6 +30,40 @@ export function Sidebar({
 }: SidebarProps) {
   const pathname = usePathname();
 
+  // Focus trap for mobile sidebar drawer
+  useEffect(() => {
+    if (!mobileOpen) return;
+
+    const sidebar = document.querySelector('[data-sidebar]');
+    if (!sidebar) return;
+
+    const focusable = sidebar.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+    );
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    first?.focus();
+
+    const handleTab = (e: KeyboardEvent) => {
+      if (e.key !== 'Tab') return;
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        }
+      } else if (document.activeElement === last) {
+        e.preventDefault();
+        first?.focus();
+      }
+    };
+
+    document.addEventListener('keydown', handleTab);
+    return () => document.removeEventListener('keydown', handleTab);
+  }, [mobileOpen]);
+
   // Pre-compute visible navigation items for consistent rendering
   const visibleSections = navigation
     .map((section) => ({
@@ -41,6 +76,7 @@ export function Sidebar({
 
   return (
     <aside
+      data-sidebar
       className={cn(
         'bg-sidebar fixed top-0 left-0 z-40 flex h-screen flex-col border-r transition-all duration-200',
         collapsed ? 'lg:w-[56px]' : 'lg:w-60',
