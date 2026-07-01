@@ -8,24 +8,37 @@ import { useSession } from 'next-auth/react';
 import type { Role } from '@/lib/rbac';
 
 export function Shell({ children }: { children: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const { data: session } = useSession();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="bg-background min-h-screen">
       <Sidebar
-        open={sidebarOpen}
-        onToggle={() => setSidebarOpen(!sidebarOpen)}
-        userRole={session?.user?.role}
+        collapsed={sidebarCollapsed}
+        mobileOpen={mobileOpen}
+        onToggleCollapse={() => setSidebarCollapsed((prev) => !prev)}
+        onCloseMobile={() => setMobileOpen(false)}
+        userRole={session?.user?.role as Role | undefined}
       />
+
+      {mobileOpen && (
+        <button
+          type="button"
+          aria-label="Close sidebar"
+          className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+
       <div
         className={cn(
           'transition-all duration-300',
-          sidebarOpen ? 'lg:pl-60' : 'lg:pl-[56px]',
+          sidebarCollapsed ? 'lg:pl-[56px]' : 'lg:pl-60',
         )}
       >
         <Header
-          onMenuClick={() => setSidebarOpen(!sidebarOpen)}
+          onMenuClick={() => setMobileOpen(true)}
           userName={session?.user?.name ?? undefined}
           userImage={session?.user?.image ?? undefined}
         />

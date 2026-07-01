@@ -6,6 +6,7 @@ import { ThemeProvider } from '@teispace/next-themes';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { Toaster } from '@/components/ui/sonner';
+import { ErrorBoundary } from '@/components/shared/error-boundary';
 
 function makeQueryClient() {
   return new QueryClient({
@@ -24,17 +25,19 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <SessionProvider>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <TooltipProvider delay={200}>
-            {children}
-            <Toaster richColors />
-          </TooltipProvider>
-        </ThemeProvider>
+        <ErrorBoundary>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <TooltipProvider delay={200}>
+              {children}
+              <Toaster richColors />
+            </TooltipProvider>
+          </ThemeProvider>
+        </ErrorBoundary>
       </SessionProvider>
     </QueryClientProvider>
   );
