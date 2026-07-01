@@ -7,6 +7,10 @@ import { eq } from 'drizzle-orm';
 import { v4 as uuid } from 'uuid';
 import { registerLimiter, checkRateLimit, getClientIP } from '@/lib/rate-limit';
 
+// Email verification toggle
+// Set VERIFY_EMAIL=false in .env to skip email verification (local dev)
+const verifyEmail = process.env.VERIFY_EMAIL !== 'false';
+
 const registerSchema = z.object({
   name: z.string().max(100).optional(),
   email: z.string().email('Invalid email'),
@@ -47,35 +51,57 @@ export async function POST(request: NextRequest) {
     }
 
     const hashedPassword = await hash(password, 12);
-    db.insert(users)
-      .values({
-        id: uuid(),
-        name: name || null,
-        email,
-        hashedPassword,
-        emailVerified: new Date(),
-        role: 'viewer',
-      })
-      .run();
 
-    // Generate email verification token
-    const verifyToken = uuid();
-    db.insert(verificationTokens)
-      .values({
-        identifier: email,
-        token: verifyToken,
-        expires: new Date(Date.now() + 86400 * 1000), // 24h
-      })
-      .run();
-    return NextResponse.json(
-      {
-        message: 'Account created successfully',
-        ...(process.env.NODE_ENV === 'development'
-          ? { verificationLink: `${request.nextUrl.origin}/verify-email?token=${verifyToken}` }
-          : {}),
-      },
-      { status: 201 },
-    );
+    if (verifyEmail) {
+      // ENFORCE: Create unverified user — must verify email before first login
+      db.insert(users)
+        .values({
+          id: uuid(),
+          name: name || null,
+          email,
+          hashedPassword,
+          emailVerified: null, // explicit: unverified
+          role: 'viewer',
+        })
+        .run();
+
+      // Generate verification token
+      const verifyToken = uuid();
+      db.insert(verificationTokens)
+        .values({
+          identifier: email,
+          token: verifyToken,
+          expires: new Date(Date.now() + 86400 * 1000), // 24h
+        })
+        .run();
+
+      return NextResponse.json(
+        {
+          message: 'Account created. Please verify your email to log in.',
+          ...(process.env.NODE_ENV === 'development'
+            ? { verificationLink: `${request.nextUrl.origin}/verify-email?token=${verifyToken}` }
+            : {}),
+        },
+        { status: 201 },
+      );
+    } else {
+      // DEV: Auto-verify — skip email verification
+      db.insert(users)
+        .values({
+          id: uuid(),
+          name: name || null,
+          email,
+          hashedPassword,
+          emailVerified: new Date(),
+          role: 'viewer',
+        })
+        .run();
+
+      return NextResponse.json(
+        { message: 'Account created successfully' },
+        { status: 201 },
+      );
+    }
   } catch {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }

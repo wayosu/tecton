@@ -10,6 +10,11 @@ import { users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import type { Role } from '@/lib/rbac';
 
+// Email verification policy toggle
+// Set VERIFY_EMAIL=false in .env to disable email verification (local dev)
+// Default: true (production-safe)
+const verifyEmail = process.env.VERIFY_EMAIL !== 'false';
+
 // Build providers array — OAuth providers are conditional
 const providers: Provider[] = [
   Credentials({
@@ -29,6 +34,12 @@ const providers: Provider[] = [
 
       const isValid = await compare(password, user.hashedPassword);
       if (!isValid) return null;
+
+      // Email verification policy (toggle via VERIFY_EMAIL env var)
+      // When enabled, unverified users cannot log in until they verify
+      if (verifyEmail && !user.emailVerified) {
+        return null;
+      }
 
       return {
         id: user.id,
