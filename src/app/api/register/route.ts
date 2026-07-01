@@ -1,27 +1,51 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { hash } from 'bcryptjs';
+import { z } from 'zod';
 import { db } from '@/lib/db';
 import { users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { v4 as uuid } from 'uuid';
+import {
+  registerLimiter,
+  checkRateLimit,
+  getClientIP,
+} from '@/lib/rate-limit';
 
-export async function POST(request: Request) {
+const registerSchema = z.object({
+  name: z.string().max(100).optional(),
+  email: z.string().email('Invalid email'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+});
+
+export async function POST(request: NextRequest) {
   try {
-    const { name, email, password } = await request.json();
-
-    if (!email || !password) {
+    // Rate limit: 5 registrations per hour per IP
+    const ip = getClientIP(request);
+    const { ok, retryAfter } = await checkRateLimit(registerLimiter, ip);
+    if (!ok) {
       return NextResponse.json(
-        { error: 'Email and password are required' },
+        { error: 'Too many registration attempts. Please try again later.' },
+        {
+          status: 429,
+          headers: { 'Retry-After': String(retryAfter) },
+        },
+      );
+    }
+
+    const body = await request.json();
+
+    // Zod validation
+    const parsed = registerSchema.safeParse(body);
+    if (!parsed.success) {
+      const firstError = Object.values(parsed.error.flatten().fieldErrors)
+        .flat()[0];
+      return NextResponse.json(
+        { error: firstError || 'Validation failed' },
         { status: 400 },
       );
     }
 
-    if (password.length < 8) {
-      return NextResponse.json(
-        { error: 'Password must be at least 8 characters' },
-        { status: 400 },
-      );
-    }
+    const { name, email, password } = parsed.data;
 
     // Check existing user
     const existing = db
@@ -44,7 +68,7 @@ export async function POST(request: Request) {
       name: name || null,
       email,
       hashedPassword,
-      role: 'viewer', // Default role for self-registration
+      role: 'viewer',
     }).run();
 
     return NextResponse.json(

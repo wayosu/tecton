@@ -5,6 +5,7 @@
 ## ✨ Features
 
 - 🔐 **Auth built-in** — Login, register, session management via NextAuth.js v5
+- 🌐 **OAuth** — Google + GitHub sign-in (optional, leave blank for credentials-only)
 - 🛡️ **RBAC** — Admin, editor, viewer roles with permission-based access
 - 🌗 **Dark mode** — System-aware theme with manual toggle
 - 🧩 **shadcn/ui** — Beautiful, accessible components you own
@@ -12,6 +13,8 @@
 - 🏗️ **Feature-based architecture** — Code organized by domain, not file type
 - 🚀 **Next.js 16** — App Router, Server Components, streaming
 - 📱 **Responsive** — Sidebar adapts to mobile, tablet, desktop
+- 📊 **CSV export** — Export user data to CSV with one click
+- ⚡ **Rate limiting** — Brute force protection on auth endpoints
 
 ## 🚀 Quick Start
 
@@ -94,9 +97,11 @@ npm run seed       # Seed database with sample users
 
 - [x] Advanced data table (TanStack Table with sorting, filtering, pagination)
 - [x] User CRUD with forms
+- [x] OAuth providers (Google, GitHub)
+- [x] CSV data export
+- [x] Rate limiting on auth endpoints
 - [ ] Charts and analytics dashboard
 - [ ] Email verification
-- [ ] OAuth providers (Google, GitHub)
 - [ ] PostgreSQL/MySQL adapter
 - [ ] E2E tests with Playwright
 - [ ] Component documentation

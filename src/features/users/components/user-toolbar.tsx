@@ -1,6 +1,6 @@
 'use client';
 
-import { Search, X } from 'lucide-react';
+import { Search, X, Download } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useDebouncedCallback } from 'use-debounce';
@@ -13,6 +13,10 @@ interface UserToolbarProps {
 
 export function UserToolbar({ search, onSearchChange, total }: UserToolbarProps) {
   const debouncedSearch = useDebouncedCallback(onSearchChange, 300);
+
+  const exportUrl = search
+    ? `/api/users/export?search=${encodeURIComponent(search)}`
+    : '/api/users/export';
 
   return (
     <div className="flex items-center gap-3">
@@ -38,6 +42,13 @@ export function UserToolbar({ search, onSearchChange, total }: UserToolbarProps)
       <span className="text-xs text-muted-foreground tabular-nums">
         {total} {total === 1 ? 'user' : 'users'}
       </span>
+      <a
+        href={exportUrl}
+        className="inline-flex h-8 items-center gap-1.5 rounded-md border bg-background px-3 text-xs font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+      >
+        <Download className="h-3.5 w-3.5" />
+        Export CSV
+      </a>
     </div>
   );
 }
