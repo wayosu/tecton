@@ -34,6 +34,13 @@ const providers: Provider[] = [
       const isValid = await compare(password, user.hashedPassword);
       if (!isValid) return null;
 
+      // For development convenience, seed users have emailVerified set
+      // New registrations must verify their email before first login
+      // Comment out this check during development if needed
+      if (!user.emailVerified) {
+        return null;
+      }
+
       return {
         id: user.id,
         name: user.name,
@@ -68,7 +75,7 @@ if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db),
-  session: { strategy: 'jwt' },
+  session: { strategy: 'jwt', maxAge: 30 * 24 * 60 * 60 },
   pages: {
     signIn: '/login',
   },

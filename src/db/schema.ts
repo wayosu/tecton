@@ -49,3 +49,15 @@ export const verificationTokens = sqliteTable('verification_tokens', {
   token: text('token').notNull().primaryKey(),
   expires: integer('expires', { mode: 'timestamp' }).notNull(),
 });
+
+// Password reset tokens
+export const resetTokens = sqliteTable('reset_tokens', {
+  id: text('id').primaryKey(),
+  email: text('email').notNull(),
+  token: text('token').notNull().unique(),
+  expires: integer('expires', { mode: 'timestamp' }).notNull(),
+  used: integer('used', { mode: 'boolean' }).notNull().default(false),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .$defaultFn(() => new Date()),
+});

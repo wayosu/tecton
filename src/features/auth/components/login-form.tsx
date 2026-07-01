@@ -124,6 +124,15 @@ export function LoginForm() {
             autoComplete="current-password"
           />
         </div>
+        <div className="flex items-center justify-between">
+          <label className="flex items-center gap-2 text-sm">
+            <input type="checkbox" name="remember" defaultChecked className="h-4 w-4 rounded border-muted-foreground/30" />
+            Remember me
+          </label>
+          <Link href="/forgot-password" className="text-xs text-primary hover:underline">
+            Forgot password?
+          </Link>
+        </div>
         <Button type="submit" className="w-full" disabled={loading || oauthLoading !== null}>
           {loading ? 'Signing in...' : 'Sign in'}
         </Button>

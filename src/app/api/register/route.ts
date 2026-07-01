@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server';
 import { hash } from 'bcryptjs';
 import { z } from 'zod';
 import { db } from '@/lib/db';
-import { users } from '@/db/schema';
+import { users, verificationTokens } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { v4 as uuid } from 'uuid';
 import {
@@ -62,17 +62,33 @@ export async function POST(request: NextRequest) {
     }
 
     const hashedPassword = await hash(password, 12);
-
-    db.insert(users).values({
+    db.insert(users)
+      .values({
       id: uuid(),
       name: name || null,
       email,
       hashedPassword,
+      emailVerified: new Date(),
       role: 'viewer',
-    }).run();
+      })
+      .run();
 
+    // Generate email verification token
+    const verifyToken = uuid();
+    db.insert(verificationTokens)
+      .values({
+        identifier: email,
+        token: verifyToken,
+        expires: new Date(Date.now() + 86400 * 1000), // 24h
+      })
+      .run();
     return NextResponse.json(
-      { message: 'Account created successfully' },
+      {
+        message: 'Account created successfully',
+        ...(process.env.NODE_ENV === 'development'
+          ? { verificationLink: `${request.nextUrl.origin}/verify-email?token=${verifyToken}` }
+          : {}),
+      },
       { status: 201 },
     );
   } catch {

@@ -39,6 +39,7 @@ async function seed() {
           name: user.name,
           email: user.email,
           hashedPassword,
+          emailVerified: new Date(),
           role: user.role,
         })
         .run();
